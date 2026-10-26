@@ -1,3 +1,11 @@
+# Samad ITPL — Folio CMS
+
+The reusable Laravel 13 + React + MySQL 8.4 CMS is in [`cms/`](cms/). It includes business pages, publishing, a store catalog with manual orders, SEO, and an admin workspace. See [`cms/README.md`](cms/README.md) for setup, credentials, client customization, verified workflows, and production boundaries.
+
+The original typing-test prototype is preserved below and in the root files.
+
+---
+
 # keysmash
 
 A playful, responsive typing speed test with 15, 30 and 60 second rounds, live WPM and accuracy, optional typing sounds, and a browser-local top-five scoreboard.

@@ -1,0 +1,25 @@
+{
+  "name": "folio-cms",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --ssr resources/js/ssr.jsx",
+    "ssr": "node bootstrap/ssr/ssr.js",
+    "test": "php artisan test --compact",
+    "format": "prettier --write resources/js resources/css vite.config.js",
+    "format:check": "prettier --check resources/js resources/css vite.config.js"
+  },
+  "dependencies": {
+    "@inertiajs/react": "3.9.1",
+    "lucide-react": "1.61.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.1.2",
+    "laravel-vite-plugin": "^3.1.0",
+    "prettier": "3.9.10",
+    "vite": "8.3.5"
+  }
+}
