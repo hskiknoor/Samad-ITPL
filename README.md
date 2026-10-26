@@ -23,7 +23,54 @@ The SEO score is a four-part metadata checklist, not a prediction of search rank
 
 ## Local setup with MySQL 8.4 LTS
 
-Requirements: PHP 8.4 with PDO MySQL (`pdo_mysql`), ctype, curl, DOM/XML, fileinfo, intl, mbstring, tokenizer and zip; Composer 2; Node 22.12+ (tested with Node 24), npm, curl, and Bash. Install PHP, Composer, and Node on your computer. For report uploads, set `upload_max_filesize=20M` and `post_max_size=24M` in the PHP configuration used by your server, then restart PHP. Docker Desktop/Engine with Compose is needed only for the Docker database option. Windows users can run the Bash scripts in WSL or Git Bash; macOS and Linux can use their terminals.
+Requirements: PHP 8.4 with PDO MySQL (`pdo_mysql`), ctype, curl, DOM/XML, fileinfo, intl, mbstring, OpenSSL, tokenizer and zip; Composer 2; Node 22.12+ (tested with Node 24) and npm. Install PHP, Composer, and Node on your computer. For report uploads, set `upload_max_filesize=20M` and `post_max_size=24M` in the PHP configuration used by your server, then restart PHP. Docker Desktop/Engine with Compose is needed only for the Docker database option. macOS/Linux scripts also require curl and Bash. Windows Command Prompt uses the native installer below.
+
+### Windows Command Prompt / XAMPP
+
+`'bash' is not recognized` means you are running a Bash command in Windows Command Prompt. Use `scripts\setup.cmd` instead. It launches the included PowerShell installer; Git Bash and WSL are optional.
+
+**Check your runtime first.** The latest Laravel requires PHP 8.4+, and this CMS requires genuine MySQL 8.4+. Many XAMPP releases include PHP 8.2 and MariaDB (even when the control-panel button says “MySQL”). Those versions do not meet the project's requirements. Install PHP 8.4+ separately if needed, select it on PATH, and open a new terminal. Composer must use the same PHP runtime. The following commands show what your terminal actually uses:
+
+```bat
+where php
+php -v
+php --ini
+composer --version
+node --version
+npm --version
+```
+
+For the simplest database setup, install/start Docker Desktop with Linux containers. In the project root, run:
+
+```bat
+scripts\setup.cmd -Docker -Demo
+```
+
+This starts the official MySQL 8.4 container, generates local database credentials, and installs the CMS. Docker uses port 3306 by default. If XAMPP's database already occupies that port, stop that database service or set an unused `DB_PORT` (such as `3307`) in `.env` before rerunning. This does not require XAMPP's Apache service. The installer checks PHP and required extensions before changing `.env`, preserves existing credentials/data, and stops on command failures.
+
+If you already have a separate MySQL 8.4+ server, create the database and dedicated user using the SQL in Option B, then run:
+
+```bat
+copy .env.example .env
+notepad .env
+scripts\setup.cmd -Demo
+```
+
+Copy the example only for a fresh installation; keep an existing `.env`. Set its `DB_*` values before setup. If `.env` is missing, the native installer creates it and asks you to configure the connection before rerunning. Omit `-Demo` for an empty CMS.
+
+After setup, keep **two Command Prompt windows** open in the project directory. In the first, start React server rendering:
+
+```bat
+npm run ssr
+```
+
+In the second, start Laravel:
+
+```bat
+php artisan serve --host=127.0.0.1 --port=8000 --no-reload
+```
+
+Open the server on port 8000 in your browser. Staff sign-in is `/login`, and the admin workspace is `/admin`. A new demo's credentials are in `storage\app\private\local-admin.json`. Both processes must stay running for server-rendered pages. Stop each with Ctrl+C. After changing frontend code, run `npm run build` and restart the SSR process. To choose or reset an administrator, run `php artisan cms:admin you@example.com --name="Your Name"` and enter a strong password at its hidden prompt.
 
 ### Option A: start MySQL with Docker (recommended)
 

@@ -1,6 +1,23 @@
 <?php
 
-/** Prepare a fresh local Docker configuration without changing existing bindings. */
+if (PHP_VERSION_ID < 80400) {
+    fwrite(STDERR, 'Folio CMS requires PHP 8.4 or newer; this terminal is using PHP '.PHP_VERSION.". Install PHP 8.4+ and update PATH before running setup.\n");
+    exit(1);
+}
+
+$requiredExtensions = ['ctype', 'curl', 'dom', 'fileinfo', 'intl', 'mbstring', 'openssl', 'pdo', 'pdo_mysql', 'session', 'tokenizer', 'xml', 'xmlwriter', 'zip'];
+$missingExtensions = array_filter($requiredExtensions, fn (string $extension): bool => ! extension_loaded($extension));
+if ($missingExtensions !== []) {
+    fwrite(STDERR, 'Enable these PHP extensions before setup: '.implode(', ', $missingExtensions).". Run php --ini to locate the active configuration.\n");
+    exit(1);
+}
+
+if (in_array('--check', $argv, true)) {
+    fwrite(STDOUT, 'PHP '.PHP_VERSION." meets the CMS requirements.\n");
+    exit(0);
+}
+
+/** Prepare a fresh local configuration without changing existing bindings. */
 $root = dirname(__DIR__);
 $path = $root.'/.env';
 if (! file_exists($path)) {
